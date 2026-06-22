@@ -10,24 +10,41 @@ weight: 2.1
 bgg_rank: 520
 bgg_rating: 7.4
 solo_type: fan-made
-solo_author: ben_uez
-solo_thread_url: https://boardgamegeek.com/boardgame/358799/castle-combo/forums/
-solo_thread_views: 
-solo_thread_replies: 
+solo_author: ben_uez (BGG)
 bgt_status: implemented
 impl_difficulty: 2
 overlap_risk: 0.05
 priority_score: 100
-discovered: 2026-06-17
-last_researched: 2026-06-22
 source: seed
 tags: [bgt, solo, implemented]
 ---
 
 # Castle Combo (2023)
 
-## Solo mode
-Fan-made solo vs "Anton" (BGG user ben_uez). Anton follows a deck of decision cards + priority cards. Anton takes cards free, scoring by difficulty multiplier at end (keys, coins, discounts × modifier).
+## Feature audit — actual code (CastleComboSoloScreen.kt, 523 lines)
 
-## Implementation notes
-BGTScreen: CastleComboSoloScreen.kt. Mechanics: decision card priority, resource tracking, difficulty table. Requires printed decision+priority card decks per fan-made rules.
+| Feature | Status | Notes |
+|---------|--------|-------|
+| 🤖 Solo tracker | ✅ | Turn 1-9, Anton resources: coins/keys/discounts, difficulty |
+| 🏆 Score counter | ✅ | Player scrolls+keys + Anton score by difficulty table |
+| 📖 Rules reference | ✅ | Full rules + scoring tables |
+| ⚙️ Setup guide | ✅ | Setup guide tab |
+| 💾 State persistence | ⚠️ | 8 rememberSaveable — no ViewModel |
+| 🌍 Multilang | ✅ |
+| 🎯 Difficulty | ✅ | Easy/Normal/Hard with different scoring multipliers |
+
+### Tabs
+- **Setup** (tab 0): preparation
+- **Solo** (tab 1): Anton turn guide + resource tracking
+- **Scoring** (tab 2): player + Anton final score
+- **Rules** (tab 3): Anton rules + difficulty table
+
+### Bot logic (simplest bot in BGT)
+Anton accumulates: coins, keys, discounts during game. Needs decision/priority cards (physical). BGT shows turn guide + resource tracker. Final score computed by difficulty multipliers.
+
+## ❗ Missing / improve
+- [ ] Decision/priority card content — player needs to print them. Could embed card images
+- [ ] **ViewModel** — state lost on rotation
+- [ ] Turn counter could auto-advance
+
+## Priority: LOW (simple, complete)

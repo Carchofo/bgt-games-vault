@@ -1,32 +1,60 @@
-# BGT Games Research Vault
+# BGT Games Vault
 
-Knowledge base for solo board games under research for the BGT app.
+Research + tracking para expansión de BGT (Board Game Tracker Android).
 
-## Structure
+## Estructura
 
 ```
-_templates/game.md     → template for new game notes
-games/implemented/     → 7 games already in BGT (reference for overlap scoring)
-games/candidates/      → pipeline output, sorted by priority_score
-queues/next-up.md      → top candidates to implement next
-queues/discovery-raw.md → latest pipeline run dump
-meta/scoring-config.md → scoring weights and formula
-meta/pipeline-runs.md  → run log
+bgt-games-vault/
+├── _templates/
+│   └── game.md              # Plantilla YAML para nuevos juegos
+├── games/
+│   ├── implemented/         # 7 juegos ya en BGT (auditados desde código real)
+│   └── candidates/          # Candidatos para implementar (pipeline n8n)
+├── queues/
+│   └── next-up.md           # Prioridad: fixes + nuevos juegos
+├── meta/
+│   └── scoring-config.md    # Fórmula de scoring para candidatos
+└── import-vault.sh          # Importar batch de n8n pipeline
 ```
 
-## Pipeline
+## Juegos implementados (auditoría real)
 
-n8n on PC (192.168.0.25:5678) → workflow `bgt-game-research`:
-1. **Agent A** (Discovery): seed list + Qwen suggestions → candidate BGG IDs
-2. **Agent B** (Research): Qwen deep-dives one game → structured JSON
-3. **Agent C** (Scoring): deterministic formula → priority_score
-4. **Agent D** (Vault Writer): JSON → markdown note → updates index
+| Juego | BGG # | Bot | Score | ViewModel |
+|-------|-------|-----|-------|-----------|
+| Spooktacular | 311430 | ✅ | ❌ | ❌ |
+| Criaturas Maravillosas | 370591 | ✅ | ✅ | ❌ |
+| Tiletum | 303553 | ✅ | ✅ | ❌ |
+| Maracaibo | 276086 | ✅ | ✅ | ❌ |
+| Castle Combo | 358799 | ✅ | ✅ | ❌ |
+| Coimbra | 205398 | ✅ | ✅ | ❌ |
+| Cascadia | 295947 | ❌ | ✅ | ❌ |
 
-BGG internal API (`/api/geekitems`) for basic game data.
-Qwen 2.5-coder:14b for solo mode research and scoring rationale.
+**Issue global: 0/7 usan ViewModel** — state se pierde en process death.
 
-## How to use
+## Pipeline investigación candidatos
 
-Open `queues/next-up.md` → pick top game → check its note in `games/candidates/` → implement in BGT.
+n8n en PC (192.168.0.25:5678) → workflow `bgt-game-research`:
+1. **Agent A** (Discovery): seed list + Qwen → 19 candidatos BGG
+2. **Agent B** (Research): Qwen 2.5-coder:14b deep-dive por juego
+3. **Agent C** (Scoring): fórmula determinista → priority_score
+4. **Agent D** (Vault Writer): JSON → markdown → `games/candidates/`
 
-After implementing: move note to `games/implemented/`, update `bgt_status: implemented`.
+## Workflow uso
+
+1. `queues/next-up.md` → elegir juego por prioridad
+2. Revisar nota en `games/candidates/`
+3. Implementar en BGT → mover nota a `games/implemented/` + `bgt_status: implemented`
+
+## Sync Mac ↔ PC
+
+```bash
+# PC: clonar una vez hay GitHub remote
+git clone https://github.com/Carchofo/bgt-games-vault.git
+
+# Mac → push cambios
+git add . && git commit -m "vault: update" && git push
+
+# PC → pull
+git pull origin main
+```

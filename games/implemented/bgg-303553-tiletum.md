@@ -11,23 +11,40 @@ bgg_rank: 182
 bgg_rating: 7.9
 solo_type: official
 solo_author: Dávid Turczi
-solo_thread_url: https://boardgamegeek.com/boardgame/303553/tiletum/forums/
-solo_thread_views: 
-solo_thread_replies: 
 bgt_status: implemented
 impl_difficulty: 4
 overlap_risk: 0.15
 priority_score: 100
-discovered: 2026-06-17
-last_researched: 2026-06-22
 source: seed
 tags: [bgt, solo, implemented]
 ---
 
 # Tiletum (2022)
 
-## Solo mode
-Official solo vs bot "Cardenal Titus" by Dávid Turczi. Titus picks dice by priority card, scores based on dice values and multipliers. 4 rounds, King phase, Fair phase. Difficulty adjustable via challenge cards (0-5 extra).
+## Feature audit — actual code (TiletumSoloScreen.kt, 1223 lines)
 
-## Implementation notes
-BGTScreen: TiletumSoloScreen.kt. Complex state: dice selection priorities, King track, Fair scoring per round. Scoring formula: yellow die = value, others = value×2. Contracts×Cathedrals final scoring.
+| Feature | Status | Notes |
+|---------|--------|-------|
+| 🤖 Solo tracker | ✅ | Dice priority system, round/turn counter, King phase, Fair phase |
+| 🏆 Score counter | ✅ | Full final scoring: player + Titus, houses×pillars, contracts×cathedrals |
+| 📖 Rules reference | ✅ | Comprehensive rules tab |
+| ⚙️ Setup guide | ✅ | Full setup with coins table |
+| 💾 State persistence | ⚠️ | 10 rememberSaveable — no ViewModel |
+| 🌍 Multilang | ✅ |
+| 🎯 Difficulty | ✅ | 0/2/5 challenge cards (Easy/Normal/Hard) |
+
+### Tabs
+- **Setup** (tab 0): preparation + challenge card selection
+- **Solo** (tab 1): Titus turn — dice color priority, action selection, scoring per turn
+- **Scoring** (tab 2): end-game calculator player + Titus
+- **Rules** (tab 3): full reference
+
+### Bot logic (most complex in BGT)
+Titus picks dice by color priority from card. Scores: Yellow die = value, others = value×2. King phase: is Titus ahead? Fair phase: (a+b) × round multiplier. 4 rounds of 3 turns.
+
+## ❗ Missing / improve
+- [ ] **ViewModel** — state lost on process death mid-4-round game (HIGH RISK — long session)
+- [ ] Challenge card content not shown — player needs physical cards
+- [ ] No mid-game save/resume
+
+## Priority: MEDIUM (ViewModel migration for long game sessions)
