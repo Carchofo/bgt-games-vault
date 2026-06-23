@@ -1,34 +1,40 @@
 # Next Up — BGT Priority Queue
 
-_Updated: 2026-06-22_
+_Updated: 2026-06-23_
 
-## 🔧 Fixes pendientes en implementados
+## 🔧 Fixes en implementados
 
-| Prioridad | Juego | Fix | Impacto |
-|-----------|-------|-----|---------|
-| 🔴 HIGH | Maracaibo | ViewModel migration (14 state vars, 3-round game) | Pérdida de partida larga |
-| 🔴 HIGH | Spooktacular | Score counter tab missing | Feature incompleta |
-| 🟠 MEDIUM | Cascadia | ViewModel migration (24+ state vars) | Calculadora se resetea |
-| 🟠 MEDIUM | Tiletum | ViewModel migration (10 state vars, 4-round) | Pérdida posible |
-| 🟡 LOW | Coimbra | Dice roller animado | UX improvement |
-| 🟡 LOW | Castle Combo | Auto-advance turn counter | Minor UX |
-| 🟡 LOW | CM/Tingent | Tracker verification warning | Aviso ya existe |
+| Estado | Juego | Fix | Sesión |
+|--------|-------|-----|--------|
+| ✅ DONE | Maracaibo | ViewModel migration (MaracaiboViewModel.kt) | 2026-06-23 |
+| ✅ DONE | Cascadia | ViewModel migration (CascadiaViewModel.kt) | 2026-06-23 |
+| ✅ DONE | Tiletum | ViewModel migration (TiletumViewModel.kt) | 2026-06-23 |
+| ✅ DONE | CM/Tingent | ViewModel migration (CMViewModel.kt) | 2026-06-23 |
+| ✅ DONE | Castle Combo | ViewModel migration (CastleComboViewModel.kt) | 2026-06-23 |
+| ✅ DONE | Spooktacular | Score counter tab + ranking | 2026-06-23 |
+| ✅ DONE | Coimbra | Dice roller animado (6 colores) | 2026-06-23 |
+| ✅ DONE | libs.versions.toml | kotlin-android plugin missing | 2026-06-23 |
 
 ## 🎲 Candidatos nuevos — Por implementar
 
-> Pendiente: ejecutar n8n research pipeline en PC → resultados en `candidates/`
+> Investigación completada 2026-06-23 con Qwen 2.5-coder:14b. Notas en `games/candidates/`.
 
-### Prioridad investigar primero (conocidos, alta demanda):
-1. **Viticulture** (BGG #59) — solo: Tuscany expansion bot (oficial Jamey Stegmaier)
-2. **Spirit Island** (BGG #5) — solo: 1 spirit inherente, muy popular
-3. **Wingspan** (BGG #65) — solo: Automa Factory oficial, ideal para BGT
-4. **Arkham Horror LCG** (BGG #84) — cooperative/solo, campaña
-5. **Friday / Freitag** (BGG #438) — solo puro, simple, muy pedido
-6. **Pandemic** (BGG #30) — coop/solo, universal
-7. **Robinson Crusoe** (BGG #160) — solo difícil, bot complejo
-8. **Gloomhaven: Jaws of the Lion** (BGG #291457) — coop/solo, accessible
-9. **7 Wonders Duel** (BGG #173346) — 2p pero modo solo existe
-10. **Too Many Bones** (BGG #241255) — solo nativo
+### Ranking por prioridad (formula: demand×0.28 + quality×0.22 + popularity×0.15 + complexity_fit×0.13 + ease×0.12 + novelty×0.10):
+
+| # | Juego | Score | Solo type | Feasibility |
+|---|-------|-------|-----------|-------------|
+| 🥇 1 | **Wingspan** | 8.13 | Automa oficial | Medium |
+| 🥈 2 | **Friday** | 7.89 | Solo-only | High ← NEXT |
+| 3 | Spirit Island | 7.72 | Nativo | Low (parcial OK) |
+| 4 | Arkham Horror LCG | 7.44 | Nativo | Low-Medium |
+| 5 | Viticulture | 7.40 | Automa oficial | Medium |
+| 6 | Too Many Bones | 6.96 | Nativo | Low-Medium |
+| 7 | Gloomhaven: Jaws | 6.87 | Nativo | Low |
+| 8 | Robinson Crusoe | 6.79 | Nativo | Low-Medium |
+| 9 | Pandemic | 6.78 | Cooperativo | Medium |
+| 10 | 7 Wonders Duel | 6.23 | Fan-made | High (score calc) |
+
+**Recomendación:** implementar **Friday** primero (más simple, solo-only, alta calidad) luego **Wingspan** (mayor demanda).
 
 ### Factores scoring (formula):
 ```
